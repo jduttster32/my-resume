@@ -8,7 +8,7 @@ def home():
 
 
 @app.route('/courses')
-def get_all_songs():
+def get_all_courses():
     courses = [
         'MISY350: Introduction to web development',
         'MISY330: Introduction to databases',
