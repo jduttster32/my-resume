@@ -1,0 +1,24 @@
+{% extends "home-base.html" %}
+{% block title %}Home Page{% endblock %}
+
+{% block head%}
+  {{ super() }}
+{% endblock%}
+
+{% block page_content%}
+  <!-- Page Content -->
+  <div class="container">
+    <h1 class="mt-5"><i class="fa fa-user-circle" aria-hidden="true"></i>About Me</h1>
+    <p>My education at the University of Delaware has included classes in marketing, communications, economics and technology which allows me to have a comprehensive understanding of how each of these areas impact and drive businesses.  I am proficient in the most updated versions of Windows, Mac OS X, Excel, Word, and PowerPoint. I am also proficient in Python, Java, HTML, CSS, JQuery, Javascript, MySQL and Microsoft Access. These classes have taught me how to bridge the gap between how a consumer uses technology and how a business uses technology to market to consumers. </p>
+    <p>This project is developed by <a id="developer" href="https://github.com/jduttster32" data-toggle="tooltip" data-placement="top" title="In the stages of learning web development">James Dutton </a><i class="fa fa-github-square" aria-hidden="true"></i>.</p>
+  </div>
+{% endblock%}
+
+{% block scripts%}
+  {{super()}}
+  <script>
+  $(document).ready(function () {
+    $('#developer').tooltip()
+  });
+  </script>
+{% endblock %}
