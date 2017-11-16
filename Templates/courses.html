@@ -10,33 +10,27 @@
 
 {% block page_content %}
 <!-- Page Content -->
-<div class="container">
+
 <h1 class="mt-5"> <i class="fa fa-book" aria-hidden="true"></i> All Courses:</h1>
 <ul>
    {% for course in courses %}
-     <li>{{course}}</li>
-   {% endfor%}
-</ul>
+     <li><a href="#{{course[0]}}" data-toggle="modal">{{course[1]}}</a></li>
 
 
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-      MISY350
-    </button>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="{{course[0]}}" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Course Description</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <h5 class="modal-title"> {{course[1]}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+            <span aria-hidden="true">&times;</span>
+
           </div>
           <div class="modal-body">
-            Covers concepts related to client side development, including cascading style sheets and JavaScript. PREREQ: MISY225.
-          </div>
+            {{course[2]}}
+         </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary">Save changes</button>
@@ -44,57 +38,8 @@
         </div>
       </div>
     </div>
+  
+    {% endfor%}
+  </ul>
 
-
-    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
-      MISY330
-    </button>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel1">Course Description</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            	Covers the design and implementation of enterprise databases in the business environment. A networked setting and its effect on database management will be emphasized. PREREQ: MISY160 or CISC181. RESTRICTIONS: MIS majors and MIS and/or GET minors only. Not open to computer science majors in the MIS minor. Not open to students who double major in both accounting and management information systems.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-third" data-toggle="modal" data-target="#exampleModal">
-      FINC311
-    </button>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel2">Course Description</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            Introduces fundamental techniques and concepts related to the financial management of business firms. Topics include the time value of money, valuation, capital budgeting, working capital management, cost of capital, capital structure analysis, short and long term financing. PREREQ: ACCT207 and MATH201. PREREQ for HRIM majors: ACCT207 and MATH201 or STAT200. RESTRICTIONS: Not open to Freshmen. Open to students whose major requires this course.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-  {% endblock %}
+{% endblock %}
