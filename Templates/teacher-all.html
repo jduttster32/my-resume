@@ -1,0 +1,38 @@
+{% extends "home-base.html"%}
+{% block title %}All Teachers{% endblock %}
+{% block page_content%}
+
+  <!-- Page Content -->
+  <div class="container">
+    <h1 class="mt-5"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Teachers:</h1>
+    <div class="row bottom-margin">
+      <a href="/teacher/add" class="btn btn-primary" role="button" aria-disabled="true">Add Teachers</a>
+    </div>
+    {% if teachers %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Department</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for teacher in teachers %}
+          <tr>
+              <th scope="row">{{teacher.id}}</th>
+              <td>{{teacher.name}}</td>
+              <td>{{teacher.department}}</td>
+              <td>
+                <a href="/teacher/edit/{{teacher.id}}" class="btn btn-success" role="button" aria-disabled="true">Edit</a>
+              </td>
+          </tr>
+          {% endfor%}
+        </tbody>
+      </table>
+    {% else %}
+      <h3>there are no teachers in the database yet.</h3>
+    {% endif %}
+  </div>
+
+{% endblock%}

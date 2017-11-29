@@ -1,23 +1,116 @@
-from flask import Flask, render_template
+import os
+from flask import Flask, session, render_template, request, flash, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'hard to guess secure key'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+# setup SQLAlchemy
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+db = SQLAlchemy(app)
+
+
+# define database tables
+class Teacher(db.Model):
+    __tablename__ = 'teachers'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    department = db.Column(db.Text)
+    courses = db.relationship('Course', backref='teacher')
+
+
+class Course(db.Model):
+    __tablename__ = 'courses'
+    id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.Integer)
+    name = db.Column(db.String(256))
+    description = db.Column(db.Text)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
 
 @app.route('/')
 def home():
-    #return '<h1>Welcome to James first server. Thanks for checking it out.</h1>'
     return render_template('home.html')
 
 
+@app.route('/teachers')
+def show_all_teachers():
+    teachers = Teacher.query.all()
+    return render_template('teacher-all.html', teachers=teachers)
+
+@app.route('/teacher/add', methods=['GET', 'POST'])
+def add_teachers():
+    if request.method == 'GET':
+        return render_template('teacher-add.html')
+    if request.method == 'POST':
+        # get data from the form
+        name = request.form['name']
+        department = request.form['department']
+
+        # insert the data into the database
+        teacher = Teacher(name=name, department=department)
+        db.session.add(teacher)
+        db.session.commit()
+        return redirect(url_for('show_all_teachers'))
+
+@app.route('/teacher/edit/<int:id>', methods=['GET', 'POST'])
+def edit_teacher(id):
+    teacher = Teacher.query.filter_by(id=id).first()
+    if request.method == 'GET':
+        return render_template('teacher-edit.html', teacher=teacher)
+    if request.method == 'POST':
+        # update data based on the form data
+        teacher.name = request.form['name']
+        teacher.department = request.form['department']
+        # update the database
+        db.session.commit()
+        return redirect(url_for('show_all_teachers'))
+
 @app.route('/courses')
-def get_all_courses():
-    courses = [
-        ['MISY350', 'Introduction to web development', 'Covers concepts related to client side development including cascading style sheets and JavaScript. PREREQ: MISY225.'],
-        ['MISY330','Introduction to databases', 'Covers the design and implementation of enterprise databases in the business environment. A networked setting and its effect on database management will be emphasized. PREREQ: MISY160 or CISC181.'],
-        ['FINC311','Intoduction to finance', 'Introduces fundamental techniques and concepts related to the financial management of business firms. Topics include the time value of money, valuation, capital budgeting, working capital management, cost of capital, capital structure analysis, short and long term financing. PREREQ: ACCT207 and MATH201.']]
-    return render_template('courses.html', courses=courses)
+def show_all_courses():
+    courses = Course.query.all()
+    return render_template('course-all.html', courses=courses)
+
+@app.route('/course/add', methods=['GET', 'POST'])
+def add_courses():
+    if request.method == 'GET':
+        teachers = Teacher.query.all()
+        return render_template('course-add.html', teachers=teachers)
+    if request.method == 'POST':
+        # get data from the form
+        number = request.form['number']
+        name = request.form['name']
+        description = request.form['description']
+        teacher_name = request.form['teacher']
+        teacher = Teacher.query.filter_by(name=teacher_name).first()
+        course = Course(name=name, number=number, teacher=teacher, description=description)
+
+        # insert the data into the database
+        db.session.add(course)
+        db.session.commit()
+        return redirect(url_for('show_all_courses'))
+
+@app.route('/course/edit/<int:id>', methods=['GET', 'POST'])
+def edit_course(id):
+    course = Course.query.filter_by(id=id).first()
+    teachers = Teacher.query.all()
+    if request.method == 'GET':
+        return render_template('course-edit.html', course=course, teachers=teachers)
+    if request.method == 'POST':
+        course.number = request.form['number']
+        course.name = request.form['name']
+        course.description = request.form['description']
+        teacher_name = request.form['teacher']
+        teacher = Teacher.query.filter_by(name=teacher_name).first()
+        course.teacher = teacher
+        # update the database
+        db.session.commit()
+        return redirect(url_for('show_all_courses'))
 
 
 @app.route('/about')
-def get_user():
+def get_about():
     #return '<h1>hello %s your age is %d</h1>' % (name, 3)
     return render_template('about.html')
 
