@@ -18,7 +18,7 @@ class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     department = db.Column(db.Text)
-    courses = db.relationship('Course', backref='teacher')
+    courses = db.relationship('Course', backref='teacher', cascade='delete')
 
 
 class Course(db.Model):
@@ -67,6 +67,18 @@ def edit_teacher(id):
         db.session.commit()
         return redirect(url_for('show_all_teachers'))
 
+@app.route('/teacher/delete/<int:id>', methods=['GET', 'POST'])
+def delete_teacher(id):
+    teacher = Teacher.query.filter_by(id=id).first()
+    if request.method == 'GET':
+        return render_template('teacher-delete.html', teacher=teacher)
+    if request.method == 'POST':
+        # delete the artist by id
+        # all related songs are deleted as well
+        db.session.delete(teacher)
+        db.session.commit()
+        return redirect(url_for('show_all_teachers'))
+
 @app.route('/courses')
 def show_all_courses():
     courses = Course.query.all()
@@ -108,6 +120,18 @@ def edit_course(id):
         db.session.commit()
         return redirect(url_for('show_all_courses'))
 
+@app.route('/course/delete/<int:id>', methods=['GET', 'POST'])
+def delete_course(id):
+    course = Course.query.filter_by(id=id).first()
+    teachers = Teacher.query.all()
+    if request.method == 'GET':
+        return render_template('course-delete.html', song=song, artists=artists)
+    if request.method == 'POST':
+        # use the id to delete the song
+        # song.query.filter_by(id=id).delete()
+        db.session.delete(course)
+        db.session.commit()
+        return redirect(url_for('show_all_courses'))
 
 @app.route('/about')
 def get_about():
